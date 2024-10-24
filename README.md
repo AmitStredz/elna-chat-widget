@@ -40,18 +40,18 @@ https://coryrylan.com/blog/how-to-use-web-components-with-typescript-and-react
 
 clone repo
 ```sh 
-  git clone https://github.com/AmitStredz/elna-chat-widget.git
+git clone https://github.com/AmitStredz/elna-chat-widget.git
 ```
 
 install dependence
 
 ```bash
-    npm install
+npm install
 ```
 
 run dev server
 ```bash
-    npm run dev
+npm run dev
 ```
 
 
