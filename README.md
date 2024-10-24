@@ -1,6 +1,6 @@
 # Elna chat widget
 
-A third party [lit](https://lit.dev/) library which can we embedded into the customers application which can interact with agents created in Elna platform
+A third party [lit](https://lit.dev/) library which can be embedded into the customers application which can interact with agents created in Elna platform
 
 ## Integration and Usage
  ### npm
