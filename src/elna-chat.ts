@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { LitElement, css, html } from "lit";
 import { customElement, property, state } from "lit/decorators.js";
 import { styleMap } from "lit/directives/style-map.js";
@@ -495,7 +494,6 @@ const connectAndCall = async (date: Date) => {
     });
 
     let result: any;
-    let datedata: any;
 
     // Call the add function
     try {

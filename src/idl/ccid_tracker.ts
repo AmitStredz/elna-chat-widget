@@ -1,6 +1,3 @@
-// src/idl/ccid_tracker_idl.ts
-import { IDL } from '@dfinity/candid';
-
 export const idlFactory = ({ IDL }: any) => {
   return IDL.Service({
     add_hash: IDL.Func([IDL.Text], [IDL.Null], []),
