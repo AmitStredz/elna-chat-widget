@@ -46,12 +46,12 @@ clone repo
 install dependence
 
 ```bash
-npm install
+    npm install
 ```
 
 run dev server
 ```bash
-  npm run dev
+    npm run dev
 ```
 
 
