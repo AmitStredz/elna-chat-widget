@@ -6,22 +6,22 @@ A third party [lit](https://lit.dev/) library which can we embedded into the cus
  ### npm
 
 ```bash 
-npm i @elna-ai/chat-widget
+npm i @amitstredz/chat-widget
 ```
 
 ### yarn 
 ```bash
-yarn add @elna-ai/chat-widget
+yarn add @amitstredz/chat-widget
 ```
 
 ### pnpm
 ```bash 
-pnpm add @elna-ai/chat-widget
+pnpm add @amitstredz/chat-widget
 ```
 
 #### Example  usage
 ```js
-   import "@elna-ai/chat-widget";
+   import "@amitstredz/chat-widget";
    ...
   <elna-chat-widget
       agentId="${AGENT_UUID_IN_ELNA}"
@@ -40,18 +40,18 @@ https://coryrylan.com/blog/how-to-use-web-components-with-typescript-and-react
 
 clone repo
 ```sh 
-  git clone https://github.com/elna-ai/chat-widget.git
+  git clone https://github.com/AmitStredz/elna-chat-widget.git
 ```
 
 install dependence
 
 ```bash
-pnpm install
+npm install
 ```
 
 run dev server
 ```bash
-  pnpm dev
+  npm run dev
 ```
 
 
