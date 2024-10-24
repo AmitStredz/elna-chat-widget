@@ -217,17 +217,16 @@ export class ElnaChat extends LitElement {
     }
   `;
 
-
   protected render() {
     return html` <div class="chat-wrapper">
       <header
         class="chat-header"
         style=${styleMap({ background: this.headerBackgroundColor })}
         @click=${() => {
-        this.dispatchEvent(
-          new CustomEvent("toggle-open", { bubbles: true, composed: true })
-        );
-      }}
+          this.dispatchEvent(
+            new CustomEvent("toggle-open", { bubbles: true, composed: true })
+          );
+        }}
       >
         <div class="chat-header__wrapper">
           <img
@@ -237,9 +236,7 @@ export class ElnaChat extends LitElement {
           />
           <div>
             <h3 class="chat-header__title">${this.wizard?.name}</h3>
-            <div class="chat-header__description">
-              ${this.agentDescription}
-            </div>
+            <div class="chat-header__description">${this.agentDescription}</div>
           </div>
           <p class="chat-header__close">
             <svg
@@ -267,22 +264,22 @@ export class ElnaChat extends LitElement {
         ? html`<div class="chat-body">
             <div class="chat-body-wrapper">
               ${this.messages.length > 0
-            ? html`${this.messages.map(
-              (message) =>
-                html`<elna-chat-bubble
+                ? html`${this.messages.map(
+                    (message) =>
+                      html`<elna-chat-bubble
                         ?isBot=${message.user.isBot}
                         message=${message.message}
                         botImage=${this.logo}
                       />`
-            )}
+                  )}
                   ${this.isResponseLoading
-                ? html`<elna-chat-bubble
+                    ? html`<elna-chat-bubble
                         botImage=${this.logo}
                         isBot
                         isLoading
                       />`
-                : ""} `
-            : html`<div>No History</div>`}
+                    : ""} `
+                : html`<div>No History</div>`}
             </div>
           </div>`
         : ""}
@@ -298,12 +295,14 @@ export class ElnaChat extends LitElement {
         <span> might slip up; double-check crucial info.</span>
       </div>
       <div class="chat-footer__input-wrapper">
-      <input
-        type="date"
-        class="chat-footer__input-wrapper__date"
-        .value=${this.inputDate ? this.inputDate.toISOString().split('T')[0] : ''}
-        @input=${this.setDate}
-      />
+        <input
+          type="date"
+          class="chat-footer__input-wrapper__date"
+          .value=${this.inputDate
+            ? this.inputDate.toISOString().split("T")[0]
+            : ""}
+          @input=${this.setDate}
+        />
         <textarea
           placeholder="Write a reply"
           class="chat-footer__input-wrapper__input"
@@ -361,7 +360,7 @@ export class ElnaChat extends LitElement {
   }
   setDate(e: Event) {
     const inputElement = e.target as HTMLInputElement;
-    this.inputDate = new Date(inputElement.value);;
+    this.inputDate = new Date(inputElement.value);
   }
 
   async handleSubmit() {
@@ -383,7 +382,7 @@ export class ElnaChat extends LitElement {
       const initialMessage = {
         user: { name: wizard[0].name, isBot: true },
         message: wizard[0].greeting,
-        date: this.inputDate
+        date: this.inputDate,
       };
       this.messages = [...this.messages, initialMessage];
       this.error = "";
@@ -404,73 +403,146 @@ export class ElnaChat extends LitElement {
       return null; // Return null or handle errors as needed
     }
   };
+  // async sendChat(agentId: string, text: string, date: Date) {
+  //   console.log(date);
+
+  //   this.isResponseLoading = true; // Set loading state
+
+  //   // Example hash (You might want to define this more dynamically)
+  //   const specificHash = "QmRDDSqJHL3ZgLugFoKiAs33gLMfsYfCHPVAsfHK29RCmu";
+
+  //   console.log("Connecting to smart contract...");
+
+  //   const hashKeys = await connectToSmartContract(date);
+  //   console.log("data from smart contract: ", hashKeys);
+
+  //   // Fetching data from Pinata using the specific hash
+  //   const dataFromHash = await this.fetchFromPinata(specificHash);
+  //   if (dataFromHash) {
+  //     console.log("Data retrieved from hash:", dataFromHash);
+  //     // You can now use this data in your messages or anywhere else
+  //   } else {
+  //     console.log("No data retrieved or error occurred.");
+  //   }
+
+  //   this.isResponseLoading = true;
+  //   const embeddings = await getTextEmbedding(text);
+  //   console.log(embeddings);
+  //   const res = await elna_RAG_backend.chat(
+  //     agentId,
+  //     text + "This is what i did on that day" + dataFromHash,
+  //     embeddings,
+  //     crypto.randomUUID()
+  //   );
+
+  //   if (isErr(res)) {
+  //     this.isResponseLoading = false;
+  //     this.messages = [
+  //       ...this.messages,
+  //       {
+  //         user: { isBot: true, name: this.wizard!.name },
+  //         message: "Something went wrong please send the message again",
+  //         date: date,
+  //       },
+  //     ];
+  //     return;
+  //   }
+
+  //   this.messages = [
+  //     ...this.messages,
+  //     {
+  //       user: { isBot: true, name: this.wizard!.name },
+  //       message: res.Ok.body.response,
+  //       date: date,
+  //     },
+  //   ];
+  //   this.inputMessage = "";
+  //   this.isResponseLoading = false;
+  // }
+
   async sendChat(agentId: string, text: string, date: Date) {
     console.log(date);
 
-    // Example hash (You might want to define this more dynamically)
-    const specificHash = "QmRDDSqJHL3ZgLugFoKiAs33gLMfsYfCHPVAsfHK29RCmu";
+    this.isResponseLoading = true; // Set loading state
 
-    console.log("Connecting to smart contract...");
+    try {
+      console.log("Connecting to smart contract...");
 
-    const hashKey = await connectToSmartContract(date);
-    console.log("data from smart contract: ", hashKey);
+      const formattedDate = formatDate(date);
 
+      // Obtain an array of hash keys from the smart contract
+      const hashKeys = await connectToSmartContract(formattedDate);
+      console.log("Hashkeys: ", hashKeys);
 
-    // Fetching data from Pinata using the specific hash
-    const dataFromHash = await this.fetchFromPinata(specificHash);
-    if (dataFromHash) {
-      console.log("Data retrieved from hash:", dataFromHash);
-      // You can now use this data in your messages or anywhere else
-    } else {
-      console.log("No data retrieved or error occurred.");
-    }
-    
-    this.isResponseLoading = true;
-    const embeddings = await getTextEmbedding(text);
-    console.log(embeddings)
-    const res = await elna_RAG_backend.chat(
-      agentId,
-      text + "This is what i did on that day" + dataFromHash,
-      embeddings,
-      crypto.randomUUID()
-    );
+      if (!hashKeys || hashKeys.length === 0) {
+        throw new Error("No hash keys returned from the smart contract.");
+      }
 
-    if (isErr(res)) {
-      this.isResponseLoading = false;
-      this.messages = [
-        ...this.messages,
-        {
-          user: { isBot: true, name: this.wizard!.name },
-          message: "Something went wrong please send the message again",
-          date: date
-        },
-      ];
-      return;
-    }
+      // Object to store data corresponding to each hash key (key-value pair)
+      const dataMap: { [key: string]: string } = {};
 
-    this.messages = [
-      ...this.messages,
-      {
+      // Iterate over hashKeys and fetch data from Pinata for each key
+      for (const hashKey of hashKeys) {
+        const dataFromHash = await this.fetchFromPinata(hashKey);
+        if (dataFromHash) {
+          dataMap[hashKey] = dataFromHash;
+        } else {
+          console.log(`No data found for hashKey: ${hashKey}`);
+        }
+      }
+
+      // Convert the key-value pairs to a concatenated string (with ". " separator)
+      const concatenatedData = Object.values(dataMap).join(". ");
+      console.log("Concatenated data: ", concatenatedData);
+
+      // Get embeddings for the user input text
+      const embeddings = await getTextEmbedding(text);
+      console.log("Embeddings: ", embeddings);
+
+      // Send the concatenated data along with the user input to the backend
+      const res = await elna_RAG_backend.chat(
+        agentId,
+        `${text}. This is what I did on that day: ${concatenatedData}`,
+        embeddings,
+        crypto.randomUUID()
+      );
+
+      // Handle the backend response
+      if (isErr(res)) {
+        throw new Error(
+          "Failed to get a valid response from the chat backend."
+        );
+      }
+
+      // Add the response to the messages array
+      this.messages.push({
         user: { isBot: true, name: this.wizard!.name },
         message: res.Ok.body.response,
-        date: date
-      },
-    ];
-    this.inputMessage = "";
-    this.isResponseLoading = false;
+        date: date,
+      });
+    } catch (error) {
+      console.error("Error in sendChat:", error);
+      this.messages.push({
+        user: { isBot: true, name: this.wizard!.name },
+        message: "Something went wrong, please try again.",
+        date: date,
+      });
+    } finally {
+      this.isResponseLoading = false; // Reset loading state
+      this.inputMessage = ""; // Clear input field
+    }
   }
 }
 
-import { idlFactory } from "./idl/ccid_tracker"; // Make sure path matches your project structure
-import { Actor, HttpAgent } from "@dfinity/agent";
-// import axios from "axios";
+// import { idlFactory } from "./idl/"; // Make sure path matches your project structure
+// import { idlFactory } from "./idl/ccid_tracker";
+const { idlFactory } = require('./idl/ccid_tracker');
 
-// const [inputText, setInputText] = useState("");
-// const [status, setStatus] = useState("");
+import { Actor, hash, HttpAgent } from "@dfinity/agent";
 
 
 // Initialize agent and actor
-const connectAndCall = async (date: Date) => {
+const connectAndCall = async (date: number) => {
   try {
     // Create an agent
     console.log("creating agent...");
@@ -490,41 +562,53 @@ const connectAndCall = async (date: Date) => {
 
     const actor = Actor.createActor(idlFactory, {
       agent,
-      canisterId: "ocpcu-jaaaa-aaaab-qab6q-cai",
+      canisterId: "6qg6m-4aaaa-aaaab-qacqq-cai",
     });
+    console.log("actor created...");
 
     let result: any;
 
     // Call the add function
     try {
       console.log("calling get_date_data function...");
-      result = await actor.get_date_data(date);
+      console.log("Date: ", date);
+
+      result = await actor.get_date_data(date + 1);
       console.log("Smart contract get_date_data result: ", result);
+      if (result) {
+        return result;
+      }
     } catch (error) {
       console.error("Error while calling smart contract add:", error);
     }
-    // try {
-    //   console.log("calling datedata function...");
-    //   const datedata = await actor.get_all_data();
-    //   console.log("Smart contract datedata result: ", datedata);
-    // } catch (error) {
-    //   console.error("Error while calling smart contract add:", error);
-    // }
-
     console.log("function called: ", result);
-    // console.log("Datedata: ", datedata);
-
   } catch (error: any) {
     console.log("Error Message: ", error.message);
   }
 };
 
-const connectToSmartContract = async (date: Date) => {
+const connectToSmartContract = async (date: number) => {
   // text.preventDefault();
   console.log("Calling Smart contract...");
 
-  await connectAndCall(date);
+  const hashKey = await connectAndCall(date);
   console.log("connect ended...");
+  if (hashKey) {
+    console.log("hashKey in connectToSmartContract: ", hashKey);
 
-  // setInputText(""); // Clear input after submission
+    return hashKey;
+  } else {
+    console.log("no hashKey in connectToSmartContract");
+
+    return;
+  }
+};
+const formatDate = (date: Date): number => {
+  // Formatting the date to yyyymmdd
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0"); // getMonth is 0-based
+  const day = String(date.getDate()).padStart(2, "0");
+
+  // Returning the formatted date as an integer
+  return parseInt(`${year}${month}${day}`, 10);
 };
